@@ -80,5 +80,9 @@ udma/udma_external_per:
   commit: master
 hwpe-mac-engine:
   commit: f1d0b72
+cim-scm-module:
+  commit: master
+  server: https://iis-git.ee.ethz.ch
+  group: manuel.eggimann
 riscv-dbg:
   commit: tags/pulpissimo-v1.0
