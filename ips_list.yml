@@ -81,7 +81,7 @@ udma/udma_external_per:
 hwpe-mac-engine:
   commit: f1d0b72
 cim-scm-module:
-  commit: master
+  commit: pulpissimo_hwpe
   server: https://iis-git.ee.ethz.ch
   group: manuel.eggimann
 riscv-dbg:
