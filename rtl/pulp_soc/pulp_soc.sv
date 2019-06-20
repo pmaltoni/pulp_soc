@@ -266,7 +266,13 @@ module pulp_soc #(
                                                 datasize: dm::DataCount,
                                                 dataaddr: dm::DataAddr
                                                };
-    localparam dm::hartinfo_t [NrHarts-1:0] HARTINFO = '{FC_Core_MHARTID: RI5CY_HARTINFO, default: 0};
+
+    dm::hartinfo_t [NrHarts-1:0]            HARTINFO;
+    always_comb begin
+        HARTINFO = '{default: '0};
+        HARTINFO[FC_Core_MHARTID] = RI5CY_HARTINFO;
+    end
+
     /*
        This module has been tested only with the default parameters.
     */
