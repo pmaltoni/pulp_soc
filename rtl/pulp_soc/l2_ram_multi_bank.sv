@@ -18,17 +18,20 @@ module l2_ram_multi_bank #(
    input logic             init_ni,
    input logic             test_mode_i,
    XBAR_TCDM_BUS.Slave     mem_slave[NB_BANKS],
-   XBAR_TCDM_BUS.Slave     mem_pri_slave[2]
+   XBAR_TCDM_BUS.Slave     mem_pri_slave[2],
+   XBAR_TCDM_BUS.Slave     exercise_mem_pri_slave
 );
     // Don't forget to adjust the SRAM macros and the FPGA settings if you change the banksizes
-    localparam int unsigned BANK_SIZE_INTL_SRAM  = 32768; //Number of 32-bit words
+    localparam int unsigned BANK_SIZE_INTL_SRAM  = 65536; //Number of 32-bit words
     localparam int unsigned BANK_SIZE_PRI0       = 8192; //Number of 32-bit words
     localparam int unsigned BANK_SIZE_PRI1       = 8192; //Number of 32-bit words
+    localparam int unsigned EXERCISE_BANK_SIZE   = 8192; //Number of 32-bit words
 
     //Derived parameters
     localparam int unsigned INTL_MEM_ADDR_WIDTH = $clog2(BANK_SIZE_INTL_SRAM);
     localparam int unsigned PRI0_MEM_ADDR_WIDTH = $clog2(BANK_SIZE_PRI0);
     localparam int unsigned PRI1_MEM_ADDR_WIDTH = $clog2(BANK_SIZE_PRI1);
+    localparam int unsigned EXERCISE_MEM_ADDR_WIDTH = $clog2(EXERCISE_BANK_SIZE);
 
     //Used in testbenches
 
@@ -167,6 +170,49 @@ module l2_ram_multi_bank #(
         .addr_i  ( pri1_address[PRI1_MEM_ADDR_WIDTH+1:2] ), //Convert from byte to word addressing
         .wdata_i ( mem_pri_slave[1].wdata                ),
         .rdata_o ( mem_pri_slave[1].r_rdata              )
+        );
+   `endif
+
+
+
+    //Perform TCDM handshaking for constant 1 cycle latency
+    assign exercise_mem_pri_slave.gnt = exercise_mem_pri_slave.req;
+    assign exercise_mem_pri_slave.r_opc = 1'b0;
+    always_ff @(posedge clk_i, negedge rst_ni) begin
+        if (!rst_ni) begin
+            exercise_mem_pri_slave.r_valid <= 1'b0;
+        end else begin
+            exercise_mem_pri_slave.r_valid <= exercise_mem_pri_slave.req;
+        end
+    end
+    //Remove Address offset
+    logic [31:0] exercise_bank_address;
+    assign exercise_bank_address = exercise_mem_pri_slave.add - `SOC_MEM_MAP_EXERCISE_BANK_START_ADDR;
+   `ifndef PULP_FPGA_EMUL
+    generic_memory #(
+      .ADDR_WIDTH ( EXERCISE_MEM_ADDR_WIDTH  ),
+      .DATA_WIDTH ( 32                  )
+   ) bank_sram_pri2_i (
+      .CLK   ( clk_i                                 ),
+      .INITN ( 1'b1                                  ),
+      .CEN   ( ~exercise_mem_pri_slave.req                 ),
+      .BEN   ( ~exercise_mem_pri_slave.be                  ),
+      .WEN   ( exercise_mem_pri_slave.wen                  ),
+      .A     ( exercise_bank_address[EXERCISE_MEM_ADDR_WIDTH+1:2] ), //Convert from byte to word addressing
+      .D     ( exercise_mem_pri_slave.wdata                ),
+      .Q     ( exercise_mem_pri_slave.r_rdata              )
+   );
+   `else // !`ifndef PULP_FPGA_EMUL
+   fpga_private_ram #(.ADDR_WIDTH(EXERCISE_MEM_ADDR_WIDTH)) bank_sram_pri2_i
+       (
+        .clk_i,
+        .rst_ni,
+        .csn_i   ( ~exercise_mem_pri_slave.req                 ),
+        .wen_i   ( exercise_mem_pri_slave.wen                  ),
+        .be_i    ( exercise_mem_pri_slave.be                   ),
+        .addr_i  ( exercise_bank_address[EXERCISE_MEM_ADDR_WIDTH+1:2] ), //Convert from byte to word addressing
+        .wdata_i ( exercise_mem_pri_slave.wdata                ),
+        .rdata_o ( exercise_mem_pri_slave.r_rdata              )
         );
    `endif
 
