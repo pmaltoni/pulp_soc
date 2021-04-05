@@ -115,3 +115,6 @@ hwpe-mac-engine:
 riscv-dbg:
   commit: v0.2
   domain: [soc]
+my_own_dummy_ip:
+  commit: 563082b97b79d232104f600bcf94650700be9990
+  domain: [pmaltoni]
