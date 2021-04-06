@@ -1,0 +1,10 @@
+adding includ dir
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: Pietro Maltoni <pmaltoni@lagrev3.ee.ethz.ch>
+#
+# HEAD detached at 30aa6c9
+# Changes to be committed:
+#	new file:   rtl/include/tcdm_macros.svh
+#

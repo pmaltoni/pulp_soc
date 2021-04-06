@@ -56,7 +56,7 @@ module soc_interconnect_wrap
        APB_BUS.Master           apb_peripheral_bus, // Connects to all the SoC Peripherals
        XBAR_TCDM_BUS.Master     l2_interleaved_slaves[NR_L2_PORTS], // Connects to the interleaved memory banks
        XBAR_TCDM_BUS.Master     l2_private_slaves[2], // Connects to core-private memory banks
-       XBAR_TCDM_BUS.Master     boot_rom_slave //Connects to the bootrom
+       XBAR_TCDM_BUS.Master     boot_rom_slave, //Connects to the bootrom
        AXI_BUS.Master           wide_alu_slave //new connection for wide_alu
      );
 
@@ -113,7 +113,7 @@ module soc_interconnect_wrap
     localparam NR_RULES_AXI_CROSSBAR = 3;
     localparam addr_map_rule_t [NR_RULES_AXI_CROSSBAR-1:0] AXI_CROSSBAR_RULES = '{
        '{ idx: 0, start_addr: `SOC_MEM_MAP_AXI_PLUG_START_ADDR,    end_addr: `SOC_MEM_MAP_AXI_PLUG_END_ADDR},
-       '{ idx: 1, start_addr: `SOC_MEM_MAP_PERIPHERALS_START_ADDR, end_addr: `SOC_MEM_MAP_PERIPHERALS_END_ADDR}};
+       '{ idx: 1, start_addr: `SOC_MEM_MAP_PERIPHERALS_START_ADDR, end_addr: `SOC_MEM_MAP_PERIPHERALS_END_ADDR},
        '{ idx: 2, start_addr: `SOC_MEM_MAP_WIDE_ALU_START_ADDR, end_addr: `SOC_MEM_MAP_WIDE_ALU_END_ADDR}};
      
 
