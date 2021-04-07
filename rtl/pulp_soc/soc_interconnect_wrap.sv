@@ -57,7 +57,7 @@ module soc_interconnect_wrap
        XBAR_TCDM_BUS.Master     l2_interleaved_slaves[NR_L2_PORTS], // Connects to the interleaved memory banks
        XBAR_TCDM_BUS.Master     l2_private_slaves[2], // Connects to core-private memory banks
        XBAR_TCDM_BUS.Master     boot_rom_slave, //Connects to the bootrom
-       AXI_BUS.Master           wide_alu_slave //new connection for wide_alu
+       AXI_BUS.Master           wide_alu_slave  //new connection for wide_alu
      );
 
     //**Do not change these values unles you verified that all downstream IPs are properly parametrized and support it**
@@ -116,7 +116,7 @@ module soc_interconnect_wrap
        '{ idx: 1, start_addr: `SOC_MEM_MAP_PERIPHERALS_START_ADDR, end_addr: `SOC_MEM_MAP_PERIPHERALS_END_ADDR},
        '{ idx: 2, start_addr: `SOC_MEM_MAP_WIDE_ALU_START_ADDR, end_addr: `SOC_MEM_MAP_WIDE_ALU_END_ADDR}};
      
-
+   
     //For legacy reasons, the fc_data port can alias the address prefix 0x000 to 0x1c0. E.g. an access to 0x00001234 is
     //mapped to 0x1c001234. The following lines perform this remapping.
     XBAR_TCDM_BUS tcdm_fc_data_addr_remapped();
@@ -182,7 +182,7 @@ module soc_interconnect_wrap
     `AXI_ASSIGN(axi_slave_plug, axi_slaves[0])
     `AXI_ASSIGN(axi_to_axi_lite_bridge, axi_slaves[1])
     `AXI_ASSIGN(wide_alu_slave, axi_slaves[2])
-   
+
     //Interconnect instantiation
     soc_interconnect #(
                        .NR_MASTER_PORTS(pkg_soc_interconnect::NR_TCDM_MASTER_PORTS), // FC instructions, FC data, uDMA RX, uDMA TX, debug access, 4 four 64-bit
@@ -195,7 +195,7 @@ module soc_interconnect_wrap
                        .NR_SLAVE_PORTS_CONTIG(3), // Bootrom + number of private memory banks (normally 1 for
                                                   // programm instructions and 1 for programm stack )
                        .NR_ADDR_RULES_SLAVE_PORTS_CONTIG(NR_RULES_CONTIG_CROSSBAR),
-                       .NR_AXI_SLAVE_PORTS(3), // 1 for AXI to cluster, 1 for SoC peripherals (converted to APB), 1 for wide_alu
+                       .NR_AXI_SLAVE_PORTS(3), // 1 for AXI to cluster, 1 for SoC peripherals (converted to APB)
                        .NR_ADDR_RULES_AXI_SLAVE_PORTS(NR_RULES_AXI_CROSSBAR),
                        .AXI_MASTER_ID_WIDTH(1), //Doesn't need to be changed. All axi masters in the current
                                                 //interconnect come from a TCDM protocol converter and thus do not have and AXI ID.
