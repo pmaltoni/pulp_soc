@@ -97,7 +97,7 @@ module interleaved_crossbar
     end
 
     //Crossbar instantiation
-    axi_xbar #(
+    xbar #(
            .NumIn(NR_MASTER_PORTS),
            .NumOut(NR_SLAVE_PORTS),
            .ReqDataWidth(REQ_AGG_DATA_WIDTH),
