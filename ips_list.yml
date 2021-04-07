@@ -118,3 +118,6 @@ riscv-dbg:
 my_own_dummy_ip:
   commit: main
   domain: [pmaltoni]
+register_interface:
+  commit: v0.2.1
+  domain: [soc]
