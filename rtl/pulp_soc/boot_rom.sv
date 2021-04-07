@@ -18,7 +18,7 @@ module boot_rom #(
      input logic             clk_i,
      input logic             rst_ni,
      input logic             init_ni,
-     UNICAD_MEM_BUS_32.Slave mem_slave,
+     XBAR_TCDM_BUS.Slave mem_slave,
      input logic             test_mode_i
     );
 

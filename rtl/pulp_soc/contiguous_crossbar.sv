@@ -112,7 +112,7 @@ module contiguous_crossbar
 
 
     //Crossbar instantiation
-    xbar #(
+    axi_xbar #(
            .NumIn(NR_MASTER_PORTS),
            .NumOut(NR_SLAVE_PORTS_INTERNAL),
            .ReqDataWidth(REQ_AGG_DATA_WIDTH),

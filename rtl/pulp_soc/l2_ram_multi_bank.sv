@@ -20,8 +20,8 @@ module l2_ram_multi_bank #(
    input logic             rst_ni,
    input logic             init_ni,
    input logic             test_mode_i,
-   UNICAD_MEM_BUS_32.Slave mem_slave[NB_BANKS-1:0],
-   UNICAD_MEM_BUS_32.Slave mem_pri_slave[NB_BANKS_PRI-1:0]
+   XBAR_TCDM_BUS.Slave mem_slave[NB_BANKS-1:0],
+   XBAR_TCDM_BUS.Slave mem_pri_slave[NB_BANKS_PRI-1:0]
 );
    //Used in testbenches
    localparam  BANK_SIZE_PRI1       = 8192;
