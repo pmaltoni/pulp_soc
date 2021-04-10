@@ -818,7 +818,7 @@ module pulp_soc import dm::*; #(
                   .AXI_USER_WIDTH(AXI_USER_WIDTH)
                   ) i_wide_alu (
                                 .clk_i(s_soc_clk),
-                                .rst_ni(s_soc_rst_ni),
+                                .rst_ni(s_soc_rstn),
                                 .test_mode_i(dft_test_mode_i),
                                 .axi_slave(s_wide_alu_bus)
                                 );
